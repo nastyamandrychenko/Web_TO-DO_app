@@ -8,6 +8,11 @@ var states = ["active", "inactive", "done"];
 var tabs = ["all"].concat(states);
 var currentTab = "all";
 
+window.onload = function () {
+  loadTodos();
+  renderTodos();
+};
+
 var form = document.getElementById("new-todo-form");
 var input = document.getElementById("new-todo-title");
 
@@ -17,6 +22,7 @@ form.onsubmit = function (event) {
     todos.push(new Todo(input.value, "active"));
     input.value = "";
     renderTodos();
+    saveTodos();
   }
 };
 
@@ -71,6 +77,7 @@ function renderTodos() {
           ) {
             todos.splice(todos.indexOf(todo), 1);
             renderTodos();
+            saveTodos();
           }
         };
       }
@@ -93,6 +100,7 @@ function renderTodos() {
         btn.onclick = function () {
           todo.state = button.action;
           renderTodos();
+          saveTodos();
         };
       }
     });
@@ -116,6 +124,17 @@ function updateBadgeCounts() {
   document.querySelector('[data-tab-name="done"] .badge').innerText = doneCount;
 }
 
+function saveTodos() {
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+function loadTodos() {
+  var savedTodos = localStorage.getItem("todos");
+  if (savedTodos) {
+    todos = JSON.parse(savedTodos);
+  }
+}
+
 function swapTodos(list, index1, index2) {
   var temp = list[index1];
   list[index1] = list[index2];
@@ -127,6 +146,7 @@ function swapTodos(list, index1, index2) {
   todos[todoIndex1] = todos[todoIndex2];
   todos[todoIndex2] = tempOriginal;
 
+  saveTodos();
   renderTodos();
 }
 
