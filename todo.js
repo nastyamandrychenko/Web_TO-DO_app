@@ -27,6 +27,9 @@ var buttons = [
   { action: "remove", icon: "trash" }
 ];
 function renderTodos() {
+
+  updateBadgeCounts();
+
   var todoList = document.getElementById("todo-list");
   todoList.innerHTML = "";
   todos
@@ -94,4 +97,16 @@ function selectTab(element) {
   }
   element.classList.add("active");
   renderTodos();
+}
+
+function updateBadgeCounts() {
+  var allCount = todos.length;
+  var activeCount = todos.filter(todo => todo.state === "active").length;
+  var inactiveCount = todos.filter(todo => todo.state === "inactive").length;
+  var doneCount = todos.filter(todo => todo.state === "done").length;
+
+  document.querySelector('[data-tab-name="all"] .badge').innerText = allCount;
+  document.querySelector('[data-tab-name="active"] .badge').innerText = activeCount;
+  document.querySelector('[data-tab-name="inactive"] .badge').innerText = inactiveCount;
+  document.querySelector('[data-tab-name="done"] .badge').innerText = doneCount;
 }
